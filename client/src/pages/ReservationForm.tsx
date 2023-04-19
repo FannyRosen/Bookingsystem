@@ -12,7 +12,10 @@ export default function ReservationForm() {
   const [numberOfPeople, setNumberOfPeople] = useState(1);
   const [date, setDate] = useState("");
   const [phase, setPhase] = useState(1);
-  const [sitting, setSitting] = useState(0);
+  const [sittingTime, setSittingTime] = useState(0);
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
 
   const navigate = useNavigate();
   const { handleSubmit } = useForm();
@@ -21,14 +24,14 @@ export default function ReservationForm() {
     setPhase(2);
   };
 
-  const onSecondSubmit = async (data: any) => {
+  const onSecondSubmit = async () => {
     let booking = {
       date: new Date(date),
-      sittingTime: sitting,
-      email: data.email,
-      numberOfPeople: numberOfPeople,
-      name: data.name,
-      phone: data.phone,
+      sittingTime,
+      email,
+      numberOfPeople,
+      name,
+      phone,
       id: "",
     };
 
@@ -71,12 +74,12 @@ export default function ReservationForm() {
       )}
       {phase === 2 && (
         <>
-          <form onSubmit={handleSubmit(onSecondSubmit)}>
+          <form onSubmit={handleSubmit(() => undefined)}>
             <h2>Available sittings:</h2>
             <button
               type="button"
               onClick={() => {
-                setSitting(1);
+                setSittingTime(1);
                 setPhase(3);
               }}
             >
@@ -85,7 +88,7 @@ export default function ReservationForm() {
             <button
               type="button"
               onClick={() => {
-                setSitting(2);
+                setSittingTime(2);
                 setPhase(3);
               }}
             >
@@ -95,27 +98,45 @@ export default function ReservationForm() {
         </>
       )}
       {phase === 3 && (
-        <>
+        <form onSubmit={handleSubmit(onSecondSubmit)}>
           <h2>Your information</h2>
           <label>
             Name:
-            <input type="text" name="name" required />
+            <input
+              type="text"
+              name="name"
+              required
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+            />
           </label>
           <br />
           <label>
             Email:
-            <input type="email" name="email" required />
+            <input
+              type="email"
+              name="email"
+              required
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
           </label>
           <br />
           <label>
             Phone number:
-            <input type="number" name="phoneNumber" required />
+            <input
+              type="tel"
+              name="phoneNumber"
+              required
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
+            />
           </label>
           <br />
           <button type="submit" value={"book"}>
             Submit reservation
           </button>
-        </>
+        </form>
       )}
     </>
   );
