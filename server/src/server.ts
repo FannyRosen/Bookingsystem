@@ -1,5 +1,5 @@
 import express, { Request, Response } from "express";
-
+import cors from "cors";
 import mongoose, { ConnectOptions } from "mongoose";
 import bookingRoute from "./routes/booking.routes";
 
@@ -9,6 +9,8 @@ interface MyConnectOptions extends ConnectOptions {
 }
 
 const app = express();
+
+app.use(cors());
 app.use(express.json());
 
 const uri = "mongodb+srv://FannyRosen:test@cluster.wmcbd5h.mongodb.net/test";
