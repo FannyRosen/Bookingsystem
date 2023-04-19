@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Controller, useForm } from "react-hook-form";
 import { postBooking } from "../services/handleBookingsFetch.service";
+import Calendar from "react-calendar";
 
 export interface ReservationFormData {
   numberOfPeople: number;
@@ -9,13 +10,21 @@ export interface ReservationFormData {
 }
 
 export default function ReservationForm() {
-  const [numberOfPeople, setNumberOfPeople] = useState(1);
-  const [date, setDate] = useState("");
+  /*   const [numberOfPeople, setNumberOfPeople] = useState(1);
+  const [date, setDate] = useState(""); */
   const [phase, setPhase] = useState(1);
   const [sitting, setSitting] = useState(0);
 
   const navigate = useNavigate();
-  const { handleSubmit } = useForm();
+  const {
+    register,
+    handleSubmit,
+    control,
+    watch,
+    formState: { errors },
+  } = useForm();
+
+  const [date, numberOfPeople] = watch(["date", "numberOfPeople"]);
 
   const onFirstSubmit = (data: any) => {
     setPhase(2);
@@ -51,19 +60,39 @@ export default function ReservationForm() {
           <form onSubmit={handleSubmit(onFirstSubmit)}>
             <label>
               Date
-              <input
-                type="date"
-                value={date}
-                onChange={(e) => setDate(e.target.value)}
+              <Controller
+                control={control}
+                name="date"
+                rules={{ required: true }}
+                render={({ field: { onChange } }) => (
+                  <Calendar
+                    onChange={onChange}
+                    minDate={new Date()}
+                    maxDate={new Date("2023-12-31")}
+                  />
+                )}
               />
             </label>
             <label>
               Number of people
-              <input
-                type="number"
-                value={numberOfPeople}
-                onChange={(e) => setNumberOfPeople(Number(e.target.value))}
-              />
+              <select
+                {...register("numberOfPeople", {
+                  required: true,
+                  min: 1,
+                  max: 6,
+                })}
+                defaultValue="0"
+              >
+                <option disabled value="0">
+                  0
+                </option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+                <option value="6">6</option>
+              </select>
             </label>
             <button type="submit">Check availability</button>
           </form>
@@ -71,50 +100,63 @@ export default function ReservationForm() {
       )}
       {phase === 2 && (
         <>
-          <form onSubmit={handleSubmit(onSecondSubmit)}>
-            <h2>Available sittings:</h2>
-            <button
-              type="button"
-              onClick={() => {
-                setSitting(1);
-                setPhase(3);
-              }}
-            >
-              18:00
-            </button>
-            <button
-              type="button"
-              onClick={() => {
-                setSitting(2);
-                setPhase(3);
-              }}
-            >
-              21:00
-            </button>
-          </form>
+          <h2>Available sittings:</h2>
+          <button
+            type="button"
+            onClick={() => {
+              setSitting(1);
+              setPhase(3);
+            }}
+          >
+            18:00
+          </button>
+          <button
+            type="button"
+            onClick={() => {
+              setSitting(2);
+              setPhase(3);
+            }}
+          >
+            21:00
+          </button>
         </>
       )}
       {phase === 3 && (
         <>
           <h2>Your information</h2>
-          <label>
-            Name:
-            <input type="text" name="name" required />
-          </label>
-          <br />
-          <label>
-            Email:
-            <input type="email" name="email" required />
-          </label>
-          <br />
-          <label>
-            Phone number:
-            <input type="number" name="phoneNumber" required />
-          </label>
-          <br />
-          <button type="submit" value={"book"}>
-            Submit reservation
-          </button>
+          <form onSubmit={handleSubmit(onSecondSubmit)} className="infoForm">
+            <label>Name:</label>
+            <input
+              className="name"
+              {...register("name", {
+                required: true,
+                minLength: 1,
+                maxLength: 40,
+              })}
+              type="text"
+            />{" "}
+            {errors.name && <label>Submit your name &#11105;</label>}
+            <label>Email:</label>
+            <input
+              className="email"
+              {...register("email", {
+                required: true,
+              })}
+              type="email"
+            />
+            {errors.email && <span>Submit your email &#11105;</span>}
+            <label>Phone number:</label>
+            <input
+              type="text"
+              className="phone"
+              {...register("phone", {
+                required: true,
+                minLength: 9,
+                maxLength: 12,
+              })}
+            />
+            {errors.phone && <span>Submit your phone number &#11105;</span>}
+          </form>
         </>
       )}
     </>
