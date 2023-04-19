@@ -13,7 +13,10 @@ export default function ReservationForm() {
   /*   const [numberOfPeople, setNumberOfPeople] = useState(1);
   const [date, setDate] = useState(""); */
   const [phase, setPhase] = useState(1);
-  const [sitting, setSitting] = useState(0);
+  const [sittingTime, setSittingTime] = useState(0);
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
 
   const navigate = useNavigate();
   const {
@@ -30,14 +33,14 @@ export default function ReservationForm() {
     setPhase(2);
   };
 
-  const onSecondSubmit = async (data: any) => {
+  const onSecondSubmit = async () => {
     let booking = {
       date: new Date(date),
-      sittingTime: sitting,
-      email: data.email,
-      numberOfPeople: numberOfPeople,
-      name: data.name,
-      phone: data.phone,
+      sittingTime,
+      email,
+      numberOfPeople,
+      name,
+      phone,
       id: "",
     };
 
@@ -100,64 +103,69 @@ export default function ReservationForm() {
       )}
       {phase === 2 && (
         <>
-          <h2>Available sittings:</h2>
-          <button
-            type="button"
-            onClick={() => {
-              setSitting(1);
-              setPhase(3);
-            }}
-          >
-            18:00
-          </button>
-          <button
-            type="button"
-            onClick={() => {
-              setSitting(2);
-              setPhase(3);
-            }}
-          >
-            21:00
-          </button>
+          <form onSubmit={handleSubmit(() => undefined)}>
+            <h2>Available sittings:</h2>
+            <button
+              type="button"
+              onClick={() => {
+                setSittingTime(1);
+                setPhase(3);
+              }}
+            >
+              18:00
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                setSittingTime(2);
+                setPhase(3);
+              }}
+            >
+              21:00
+            </button>
+          </form>
         </>
       )}
       {phase === 3 && (
-        <>
+        <form onSubmit={handleSubmit(onSecondSubmit)}>
           <h2>Your information</h2>
-          <form onSubmit={handleSubmit(onSecondSubmit)} className="infoForm">
-            <label>Name:</label>
+          <label>
+            Name:
             <input
-              className="name"
-              {...register("name", {
-                required: true,
-                minLength: 1,
-                maxLength: 40,
-              })}
               type="text"
-            />{" "}
-            {errors.name && <label>Submit your name &#11105;</label>}
-            <label>Email:</label>
+              name="name"
+              required
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+            />
+          </label>
+          <br />
+          <label>
+            Email:
             <input
-              className="email"
-              {...register("email", {
-                required: true,
-              })}
               type="email"
+              name="email"
+              required
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
             />
-            {errors.email && <span>Submit your email &#11105;</span>}
-            <label>Phone number:</label>
+          </label>
+          <br />
+          <label>
+            Phone number:
             <input
-              type="text"
-              className="phone"
-              {...register("phone", {
-                required: true,
-                minLength: 9,
-                maxLength: 12,
-              })}
+              type="tel"
+              name="phoneNumber"
+              required
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
             />
-            {errors.phone && <span>Submit your phone number &#11105;</span>}
-          </form>
-        </>
+          </label>
+          <br />
+          <button type="submit" value={"book"}>
+            Submit reservation
+          </button>
+        </form>
       )}
     </>
   );
