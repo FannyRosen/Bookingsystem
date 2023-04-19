@@ -1,5 +1,4 @@
 import express, { Request, Response } from "express";
-
 import mongoose, { ConnectOptions } from "mongoose";
 import bookingRoute from "./routes/booking.routes";
 
@@ -27,9 +26,9 @@ mongoose
     console.log("Database connection error: ", error);
   });
 
-app.get("/api", (req: Request, res: Response) => {
+/* app.get("/api", (req: Request, res: Response) => {
   res.json({ users: ["userOne", "userTwo", "userThree"] });
-});
+}); */
 
 app.get("/", (req: Request, res: Response) => {
   res.send("Check server is running");

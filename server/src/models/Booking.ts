@@ -5,5 +5,5 @@ export interface Booking {
   date: Date;
   numberOfPeople: number;
   sittingTime: number;
-  clientId: ObjectId;
+  clientId?: ObjectId;
 }
