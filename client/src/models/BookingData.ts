@@ -1,4 +1,4 @@
-import { CustomerData } from "./CustomerData";
+import { CustomerData, customersDefaultValue } from "./CustomerData";
 
 export interface BookingData {
   _id?: string;
@@ -24,3 +24,11 @@ export interface BookingResponse {
 export interface BookingsResponse {
   data: BookingData[];
 }
+
+export const bookingsDefaultValue: BookingData = {
+  _id: "",
+  date: new Date(),
+  sittingTime: 0,
+  clientId: customersDefaultValue,
+  numberOfPeople: 0,
+};

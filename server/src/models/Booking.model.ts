@@ -14,11 +14,11 @@ const BookingSchema = new mongoose.Schema<Booking>({
     type: Number,
     // required: true,
   },
-  /*   clientId: {
+  clientId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Customers",
     // required: true,
-  }, */
+  },
 });
 
 export const BookingModel = mongoose.model<Booking>("Bookings", BookingSchema);

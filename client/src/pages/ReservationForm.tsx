@@ -10,20 +10,20 @@ export interface ReservationFormData {
 }
 
 export default function ReservationForm() {
-  /*   const [numberOfPeople, setNumberOfPeople] = useState(1);
+  /*  const [numberOfPeople, setNumberOfPeople] = useState(1);
   const [date, setDate] = useState(""); */
   const [phase, setPhase] = useState(1);
   const [sittingTime, setSittingTime] = useState(0);
-  const [name, setName] = useState("");
+  /*   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-  const [phone, setPhone] = useState("");
+  const [phone, setPhone] = useState(""); */
 
   const navigate = useNavigate();
   const {
-    register,
     handleSubmit,
-    control,
     watch,
+    control,
+    register,
     formState: { errors },
   } = useForm();
 
@@ -33,14 +33,14 @@ export default function ReservationForm() {
     setPhase(2);
   };
 
-  const onSecondSubmit = async () => {
+  const onSecondSubmit = async (data: any) => {
     let booking = {
       date: new Date(date),
-      sittingTime,
-      email,
-      numberOfPeople,
-      name,
-      phone,
+      sittingTime: sittingTime,
+      email: data.email,
+      numberOfPeople: numberOfPeople,
+      name: data.name,
+      phone: data.phone,
       id: "",
     };
 
@@ -48,7 +48,7 @@ export default function ReservationForm() {
       .then((resData) => {
         booking.id = resData.data._id!;
 
-        /*   navigate("/thankyou", { state: booking }); */
+        navigate("/thankyou", { state: booking });
       })
       .catch((e) => {
         console.log(e);
@@ -79,10 +79,11 @@ export default function ReservationForm() {
             <label>
               Number of people
               <select
+                className="nop"
                 {...register("numberOfPeople", {
                   required: true,
                   min: 1,
-                  max: 6,
+                  max: 12,
                 })}
                 defaultValue="0"
               >
@@ -96,11 +97,13 @@ export default function ReservationForm() {
                 <option value="5">5</option>
                 <option value="6">6</option>
               </select>
+              {errors.numberOfPeople && <p>Pick number of people &#11105;</p>}
             </label>
             <button type="submit">Check availability</button>
           </form>
         </>
       )}
+
       {phase === 2 && (
         <>
           <form onSubmit={handleSubmit(() => undefined)}>
@@ -129,38 +132,39 @@ export default function ReservationForm() {
       {phase === 3 && (
         <form onSubmit={handleSubmit(onSecondSubmit)}>
           <h2>Your information</h2>
-          <label>
-            Name:
-            <input
-              type="text"
-              name="name"
-              required
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-            />
-          </label>
+          <label> Name:</label>
+          <input
+            className="name"
+            {...register("name", {
+              required: true,
+              minLength: 1,
+              maxLength: 40,
+            })}
+            type="text"
+          />{" "}
+          {errors.name && <p>Submit your name &#11105;</p>}
           <br />
-          <label>
-            Email:
-            <input
-              type="email"
-              name="email"
-              required
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
-          </label>
+          <label> Email: </label>
+          <input
+            className="email"
+            {...register("email", {
+              required: true,
+            })}
+            type="email"
+          />
+          {errors.email && <p>Submit your email &#11105;</p>}
           <br />
-          <label>
-            Phone number:
-            <input
-              type="tel"
-              name="phoneNumber"
-              required
-              value={phone}
-              onChange={(e) => setPhone(e.target.value)}
-            />
-          </label>
+          <label> Phone number: </label>
+          <input
+            type="number"
+            className="phone"
+            {...register("phone", {
+              required: true,
+              minLength: 9,
+              maxLength: 12,
+            })}
+          />
+          {errors.phone && <p>Submit your phone number &#11105;</p>}
           <br />
           <button type="submit" value={"book"}>
             Submit reservation

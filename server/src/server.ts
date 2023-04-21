@@ -2,6 +2,7 @@ import express, { Request, Response } from "express";
 import cors from "cors";
 import mongoose, { ConnectOptions } from "mongoose";
 import bookingRoute from "./routes/booking.routes";
+import customerRoute from "./routes/customer.routes";
 
 interface MyConnectOptions extends ConnectOptions {
   useUnifiedTopology: boolean;
@@ -29,10 +30,6 @@ mongoose
     console.log("Database connection error: ", error);
   });
 
-/* app.get("/api", (req: Request, res: Response) => {
-  res.json({ users: ["userOne", "userTwo", "userThree"] });
-}); */
-
 app.get("/", (req: Request, res: Response) => {
   res.send("Check server is running");
 });
@@ -42,3 +39,4 @@ app.listen(8000, () => {
 });
 
 app.use("/bookings", bookingRoute);
+app.use("/customers", customerRoute);
