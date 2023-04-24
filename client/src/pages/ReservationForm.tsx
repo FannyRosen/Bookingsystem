@@ -58,7 +58,7 @@ export default function ReservationForm() {
   return (
     <>
       {phase === 1 && (
-        <>
+        <div className="reservation-wrapper">
           <h2>Book a table</h2>
           <form onSubmit={handleSubmit(onFirstSubmit)}>
             <label>
@@ -72,6 +72,7 @@ export default function ReservationForm() {
                     onChange={onChange}
                     minDate={new Date()}
                     maxDate={new Date("2023-12-31")}
+                    className="calendar"
                   />
                 )}
               />
@@ -101,7 +102,7 @@ export default function ReservationForm() {
             </label>
             <button type="submit">Check availability</button>
           </form>
-        </>
+        </div>
       )}
 
       {phase === 2 && (
