@@ -6,6 +6,8 @@ import ReservationForm from "./pages/ReservationForm";
 import { ThankYou } from "./pages/ThankYou";
 import { AdminBookings } from "./pages/AdminBookings";
 import { SingleBooking } from "./pages/SingleBooking";
+import { Customer } from "./pages/Customer";
+import { Customers } from "./pages/Customers";
 
 function App() {
   return (
@@ -20,6 +22,14 @@ function App() {
             <Route index element={<AdminBookings />}></Route>
             <Route path=":id" element={<SingleBooking />}></Route>
           </Route>
+
+          <Route path="/admin/customers">
+            <Route index element={<Customers />}></Route>
+            <Route path=":id" element={<Customer />}></Route>
+          </Route>
+
+          <Route path="/reservation/:id" element={<SingleBooking />}></Route>
+
           <Route path="*" element={<NotFound />}></Route>
         </Routes>
       </BrowserRouter>

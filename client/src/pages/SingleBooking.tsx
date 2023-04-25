@@ -4,6 +4,9 @@ import { BookingData, bookingsDefaultValue } from "../models/BookingData";
 import { CustomerData, customersDefaultValue } from "../models/CustomerData";
 import { fetchBookingByID } from "../services/handleBookingsFetch.service";
 import { fetchCustomerByID } from "../services/handleCustomersFetch.service";
+import { BookingDeleteButton } from "./admin/BookingDeleteButton";
+import { SingleBookingRender } from "./admin/SingleBookingRender";
+import { UpdateBooking } from "./admin/UpdateBooking";
 
 export const SingleBooking = () => {
   const [booking, setBooking] = useState<BookingData>(bookingsDefaultValue);
@@ -33,5 +36,56 @@ export const SingleBooking = () => {
     }
   }, [booking]);
 
-  return <></>;
+  return (
+    <>
+      {adminPath ? (
+        <>
+          {inEdit ? (
+            <>
+              <UpdateBooking onClick={() => setInEdit(false)} />
+
+              <button onClick={() => setInEdit(false)}>Back</button>
+            </>
+          ) : (
+            <div>
+              <SingleBookingRender
+                booking={booking}
+                customer={customer}
+              ></SingleBookingRender>
+              <div>
+                <button className="editbutton" onClick={() => setInEdit(true)}>
+                  Edit
+                </button>
+
+                <BookingDeleteButton
+                  adminPath={adminPath}
+                  guestPath={guestPath}
+                  booking={booking}
+                ></BookingDeleteButton>
+              </div>
+            </div>
+          )}
+        </>
+      ) : (
+        <>
+          {guestPath ? (
+            <>
+              <SingleBookingRender
+                booking={booking}
+                customer={customer}
+              ></SingleBookingRender>
+
+              <BookingDeleteButton
+                adminPath={adminPath}
+                guestPath={guestPath}
+                booking={booking}
+              ></BookingDeleteButton>
+            </>
+          ) : (
+            <></>
+          )}
+        </>
+      )}
+    </>
+  );
 };
